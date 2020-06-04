@@ -1959,6 +1959,24 @@ bootstrap_stage3() {
 		# use the new dynamic linker in place of rpath from now on.
 		RAP_DLINKER=$(echo "${ROOT}"/$(get_libdir)/ld*.so.[0-9])
 		export LDFLAGS="-L${ROOT}/usr/$(get_libdir) -Wl,--dynamic-linker=${RAP_DLINKER}"
+
+		# Use the new dynamic linker even for the stage2 gcc, so that
+		# stage2 gcc does not break while building stage3 gcc when
+		# LD_LIBRARY_PATH starts to override some of the gcc libraries
+		# (libstdc++.so) from host versions to stage3 versions, which
+		# may be incompatible with the host versions of the remaining
+		# non-overriden libraries (libc.so). The alternative to
+		# changing interpreter now would be to link stage2 gcc
+		# statically in the first place, so that it is not affected by
+		# LD_LIBRARY_PATH, but that doesn't (and can't?) happen on
+		# hosts that do not have libc.a (glibc-static) and libstdc++.a
+		# (libstdc++-static) installed. Fixes Bug #702342.
+		find "${ROOT}"/tmp/usr/bin/${CHOST}-* "${ROOT}"/tmp/usr/libexec/gcc/${CHOST} \
+			\( -type f -or -type l \) -executable \
+			-not \( -name '*.la' -or -name '*.a' -or -name '*.so.*' -or -name '*.so' \) \
+			-exec patchelf --set-interpreter "${RAP_DLINKER}" {} \; \
+                       || return 1
+
 		BOOTSTRAP_RAP=yes \
 		pre_emerge_pkgs --nodeps "${pkgs[@]}" || return 1
 

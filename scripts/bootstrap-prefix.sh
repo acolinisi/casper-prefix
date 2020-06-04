@@ -34,6 +34,10 @@ econf() {
 efetch() {
 	if [[ ! -e ${DISTDIR}/${1##*/} ]] ; then
 	  	if [[ ${OFFLINE_MODE} ]]; then
+		  if [[ ${TODO} == 'noninteractive' ]]; then
+			eerror "Source archive ${1##*/} not found in offline mode"
+			return 1
+		  fi
 		  echo "I need ${1##*/} from $1 in $DISTDIR, can you give it to me?"
 		  read
 		  [[ -e ${DISTDIR}/${1##*/} ]] && return 0

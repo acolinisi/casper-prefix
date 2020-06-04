@@ -1358,10 +1358,9 @@ bootstrap_stage1() {
 	# don't rely on $MAKE, if make == gmake packages that call 'make' fail
 	[[ $(make --version 2>&1) == *GNU" Make "4* ]] \
 		|| (bootstrap_make) || return 1
-	[[ ${OFFLINE_MODE} ]] || [[ -x ${ROOT}/tmp/usr/bin/openssl ]] \
+	[[ -x ${ROOT}/tmp/usr/bin/openssl ]] \
 		|| (bootstrap_libressl) # do not fail if this fails, we'll try without
-	[[ ${OFFLINE_MODE} ]] || type -P wget > /dev/null \
-		|| (bootstrap_wget) || return 1
+	type -P wget > /dev/null || (bootstrap_wget) || return 1
 	[[ $(sed --version 2>&1) == *GNU* ]] || (bootstrap_sed) || return 1
 	type -P xz > /dev/null || (bootstrap_xz) || return 1
 	type -P bzip2 > /dev/null || (bootstrap_bzip2) || return 1

@@ -2142,16 +2142,12 @@ bootstrap_stage3() {
 	nowdate=$(date +%s)
 	[[ ( ! -e ${PORTDIR}/.unpacked ) && \
 		$((nowdate - (60 * 60 * 24))) -lt ${treedate} ]] || \
-	if [[ ${OFFLINE_MODE} ]]; then
-		# --keep used ${DISTDIR}, which make it easier to download a
-		# snapshot beforehand
-		if [[ -n "${SNAPSHOT_DATE}" ]]; then
-			snapshot_arg="--revert=${SNAPSHOT_DATE}"
-		fi
-		emerge-webrsync --keep ${snapshot_arg} || return 1
-	else
-		emerge --sync || emerge-webrsync || return 1
+	# --keep used ${DISTDIR}, which make it easier to download a
+	# snapshot beforehand
+	if [[ -n "${SNAPSHOT_DATE}" ]]; then
+		snapshot_arg="--revert=${SNAPSHOT_DATE}"
 	fi
+	emerge-webrsync --keep ${snapshot_arg} || return 1
 
 	# avoid installing git or encryption just for fun while completing @system
 	export USE="-git -crypt"

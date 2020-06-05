@@ -600,7 +600,12 @@ bootstrap_tree() {
 	is-rap && LATEST_TREE_YES=1
 	local PV="20190711"
 	if [[ -n ${LATEST_TREE_YES} ]]; then
-		do_tree "${SNAPSHOT_URL}" portage-latest.tar.bz2
+		if [[ -n "${SNAPSHOT_PORTAGE_DATE}" ]]; then
+			local snapshot=${SNAPSHOT_PORTAGE_DATE}
+		else
+			local snapshot=latest
+		fi
+		do_tree "${SNAPSHOT_URL}" portage-${snapshot}.tar.bz2
 	else
 		do_tree http://dev.gentoo.org/~grobian/distfiles prefix-overlay-${PV}.tar.bz2
 	fi

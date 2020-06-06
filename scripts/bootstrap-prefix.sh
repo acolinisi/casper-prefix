@@ -600,8 +600,8 @@ bootstrap_tree() {
 	is-rap && LATEST_TREE_YES=1
 	local PV="20190711"
 	if [[ -n ${LATEST_TREE_YES} ]]; then
-		if [[ -n "${SNAPSHOT_PORTAGE_DATE}" ]]; then
-			local snapshot=${SNAPSHOT_PORTAGE_DATE}
+		if [[ -n "${SNAPSHOT_DATE}" ]]; then
+			local snapshot=${SNAPSHOT_DATE}
 		else
 			local snapshot=latest
 		fi

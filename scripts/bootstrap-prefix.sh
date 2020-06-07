@@ -1427,8 +1427,6 @@ bootstrap_stage1() {
 		|| (bootstrap_coreutils) || return 1
 	[[ $(find --version 2>&1) == *GNU* ]] || (bootstrap_findutils) || return 1
 	[[ $(tar --version 2>&1) == *GNU* ]] || (bootstrap_tar) || return 1
-	[[ $(patch --version 2>&1) == *"patch 2."[6-9]*GNU* ]] \
-		|| (bootstrap_patch) || return 1
 	[[ $(patchelf --version 2>&1) == *"patchelf 0.10" ]] \
 		|| [[ $(patchelf --version 2>&1) == *"patchelf 0.9" ]] \
 		|| (bootstrap_patchelf) || return 1
